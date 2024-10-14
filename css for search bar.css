@@ -1,0 +1,42 @@
+
+
+        .center-item {
+            position: absolute;
+        }
+
+        #search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #1a1a1a;
+            border-radius: 24px;
+            padding: 10px 20px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+            cursor: url('https://i.postimg.cc/1zsJhVmq/13-Mover.png'), auto;
+            color: #00ffff;
+            z-index: 1000;
+        }
+
+        #search-bar input {
+            border: none;
+            outline: none;
+            font-size: 16px;
+            cursor: url('https://i.postimg.cc/jj1cWg6z/7-Escritura-a-mano.png'), auto;
+            flex-grow: 1;
+            background-color: transparent;
+            color: #00ffff;
+            padding-left: 10px;
+        }
+
+        .icon {
+            margin-left: 10px;
+            color: #00ffff;
+            font-size: 20px;
+            cursor: url('https://i.postimg.cc/1zsJhVmq/13-Mover.png'), auto;
+            transition: color 0.3s;
+        }
+
+        .icon:hover {
+            color: #ff00ff;
+        }

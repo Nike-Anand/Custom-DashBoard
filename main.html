@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Dashboard and Cat Animation</title>
+
+    <style>
+        /* Main Dashboard CSS */
+        @import url('https://fonts.googleapis.com/css?family=Luckiest+Guy&display=swap');
+
+        :root {
+            --accent: #7BA7BC;
+            --black: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Luckiest Guy', sans-serif;
+        }
+
+        body {
+            background-color: #feeeed5e;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            min-height: 100vh;
+            color:  #01f34a;
+            grid-template-rows: 1fr 4fr;
+            overflow: hidden;
+        }
+
+        p {
+            font-size: calc(1.1rem + 1vw);
+            line-height: 1.4em;
+            margin: 0;
+            text-align: center;
+            color: var(--black);
+        }
+
+        .highlight {
+            color: var(--accent);
+        }
+
+        #dashboard {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: url('https://i.postimg.cc/028x8Ndm/1-Selecci-n-normal.png'), auto;
+            
+        }
+
+        .icon-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .item {
+            background-color: #282828;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            border: 2px solid #444;
+            cursor: url('https://i.postimg.cc/1zsJhVmq/13-Mover.png'), auto;
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            transition: transform 0.3s ease;
+            user-select: none;
+            color: white;
+            text-align: center;
+        }
+
+        .center-item {
+            background-color: #42f477;
+            color: white;
+            text-align: center;
+            width: 250px;
+            height: 50px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-icon {
+            background-color: #444;
+            border: 2px dashed #666;
+            cursor: url('https://i.postimg.cc/vHwPLNJh/15-Selecci-n-de-v-nculo.png'), auto;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        .dragging {
+            opacity: 0.7;
+            transform: scale(1.1);
+            
+
+        }
+
+        #addIconModal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #393e46;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+            width: 300px;
+        
+        }
+
+        #addIconModal input,
+        #addIconModal select {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid  rgba(255, 0, 0, 0.6);
+            border-radius: 5px;
+                   
+
+        }
+
+        #addIconModal button {
+            padding: 10px 20px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+                   
+
+        }
+
+        #addIconModal button:hover {
+            background-color: #357ae8;
+        }
+
+        .close-btn {
+            background-color: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--black);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .radio-group label {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+        #iconLink{
+            background-color: rgba(245, 245, 245, 0.664);
+        }
+        #iconName{
+            background-color: rgba(245, 245, 245, 0.664);
+        }
+        #iconImageURL{
+            background-color: rgba(245, 245, 245, 0.664);
+        }
+        #iconImage{
+            background-color: rgba(245, 245, 245, 0.664);
+            color: #0044ffb4;
+        }
+        #file-upload-button{
+            background-color: rgba(245, 245, 245, 0.664);
+        }
+    </style>
+   <link rel="stylesheet" href="style for cursor.css">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+   <link rel="stylesheet" href="css for search bar.css">
+ 
+</head>
+
+<body>
+
+    <div id="dashboard" class="blur-target">
+        <div class="icon-container"></div>
+        <div id="search-bar" class="item center-item" draggable="true" style="bottom: 20%; left: 0;">
+            <i class="fas fa-search icon" onclick="searchGoogle()"></i>
+            <input type="text" id="search-input" placeholder="Search Google or type a URL" onkeydown="if(event.key === 'Enter') searchGoogle()">
+            <i class="fas fa-microphone icon"></i>
+            <i class="fas fa-camera icon"></i>
+        </div>
+        <div class="item add-icon" id="addIcon">+</div>
+    </div>
+
+    <div id="addIconModal">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h3>Add a New Icon</h3>
+        <input type="text" id="iconName" placeholder="Enter Icon Name">
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="iconType" value="upload" checked>
+                Choose Image File
+            </label>
+            <label>
+                <input type="radio" name="iconType" value="link">
+                Enter Image URL
+            </label>
+        </div>
+        <input type="file" id="iconImage" placeholder="Select Icon Image" accept="image/*">
+        <input type="text" id="iconImageURL" placeholder="Enter Icon Image URL" style="display: none;">
+        <input type="text" id="iconLink" placeholder="Enter Icon Link">
+        <button id="saveIcon">Save</button>
+    </div>
+
+    <script>
+        let draggedItem = null;
+        const dashboard = document.getElementById('dashboard');
+        const iconContainer = document.querySelector('.icon-container');
+        const searchBar = document.getElementById('search-bar');
+
+        // Load saved icons on page load
+        window.onload = () => {
+            const savedIcons = JSON.parse(localStorage.getItem('icons')) || [];
+            savedIcons.forEach(icon => {
+                createIcon(icon.id, icon.link, icon.image, icon.left, icon.top);
+            });
+        };
+
+        const createIcon = (id, link, image, left, top) => {
+            const newIcon = document.createElement('div');
+            newIcon.className = 'item';
+            newIcon.id = id; // Assign a unique ID
+            newIcon.style.backgroundImage = `url(${image})`;
+            newIcon.style.backgroundSize = 'contain';
+            newIcon.style.backgroundRepeat = 'no-repeat';
+            newIcon.style.backgroundPosition = 'center';
+            newIcon.draggable = true;
+            newIcon.style.left = `${left}px`;
+            newIcon.style.top = `${top}px`;
+            newIcon.onclick = () => openLink(link);
+            iconContainer.appendChild(newIcon);
+            
+            // Add dragging event listeners for icons
+            newIcon.addEventListener('dragstart', function () {
+                draggedItem = newIcon;
+                setTimeout(() => newIcon.classList.add('dragging'), 0);
+            });
+
+            newIcon.addEventListener('dragend', function () {
+                setTimeout(() => newIcon.classList.remove('dragging'), 0);
+                draggedItem = null;
+
+                const iconPositions = JSON.parse(localStorage.getItem('icons')) || [];
+                const index = iconPositions.findIndex(icon => icon.id === newIcon.id);
+                iconPositions[index].left = newIcon.offsetLeft;
+                iconPositions[index].top = newIcon.offsetTop;
+                localStorage.setItem('icons', JSON.stringify(iconPositions));
+            });
+        };
+
+        // Dragging events for the search bar
+        searchBar.addEventListener('dragstart', function () {
+            draggedItem = searchBar;
+            setTimeout(() => searchBar.classList.add('dragging'), 0);
+        });
+
+        searchBar.addEventListener('dragend', function () {
+            setTimeout(() => searchBar.classList.remove('dragging'), 0);
+            draggedItem = null;
+
+            const x = searchBar.offsetLeft;
+            const y = searchBar.offsetTop;
+
+            // Store the position in local storage or handle as needed
+            console.log(`Search bar moved to: X=${x}, Y=${y}`);
+        });
+
+        dashboard.addEventListener('dragover', function (event) {
+            event.preventDefault();
+        });
+
+        dashboard.addEventListener('drop', function (event) {
+            event.preventDefault();
+            if (draggedItem) {
+                const x = event.clientX - dashboard.offsetLeft - draggedItem.clientWidth / 2;
+                const y = event.clientY - dashboard.offsetTop - draggedItem.clientHeight / 2;
+                draggedItem.style.left = `${x}px`;
+                draggedItem.style.top = `${y}px`;
+            }
+        });
+
+        // Add new icon modal logic
+        document.getElementById('addIcon').onclick = () => {
+            document.getElementById('addIconModal').style.display = 'block';
+        };
+
+        document.getElementById('saveIcon').onclick = () => {
+            const name = document.getElementById('iconName').value;
+            const link = document.getElementById('iconLink').value;
+            const image = document.getElementById('iconImageURL').value || URL.createObjectURL(document.getElementById('iconImage').files[0]);
+            const newId = 'icon-' + Date.now();
+
+            createIcon(newId, link, image, 0, 0); // Create at default position (0, 0)
+            const icons = JSON.parse(localStorage.getItem('icons')) || [];
+            icons.push({ id: newId, link, image, left: 0, top: 0 });
+            localStorage.setItem('icons', JSON.stringify(icons));
+            closeModal();
+        };
+
+        const closeModal = () => {
+            document.getElementById('addIconModal').style.display = 'none';
+        };
+
+        const openLink = (link) => {
+            window.open(link, '_blank');
+        };
+
+        const searchGoogle = () => {
+            const query = document.getElementById('search-input').value;
+            const url = query.includes('.') ? query : 'https://www.google.com/search?q=' + encodeURIComponent(query);
+            window.open(url, '_blank');
+        };
+
+        // Toggle icon image URL input visibility based on radio selection
+        document.querySelectorAll('input[name="iconType"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const isUpload = this.value === 'upload';
+                document.getElementById('iconImage').style.display = isUpload ? 'block' : 'none';
+                document.getElementById('iconImageURL').style.display = isUpload ? 'none' : 'block';
+            });
+        });
+    </script>
+    <script src="search bar.js"></script>
+    <script src="javascript for cursor.dart"></script>
+</body>
+</html>

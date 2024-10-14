@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #111;
+}
+
+.trail {
+    position: absolute;
+    width: 30px; /* Length of each horizontal segment */
+    height: 4px; /* Thickness of the line */
+    background-color: rgba(255, 0, 0, 0.8); /* Neon cyan color */
+    pointer-events: none;
+    border-radius: 2px; /* Smooth rounded edges */
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 
+                0 0 20px rgba(255, 0, 0, 0.6), 
+                0 0 30px rgba(255, 0, 0, 0.6); /* Neon glow effect */
+    transition: transform 0.1s ease-out, left 0.1s ease-out, top 0.1s ease-out; /* Smooth tail animation */
+    transform-origin: center center; /* Set origin to center */
+}

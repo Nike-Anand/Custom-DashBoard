@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Icons</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #e4e7eb;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .remove-btn {
+            background-color: #ff4f4f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+
+        .remove-btn:hover {
+            background-color: #e04343;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Remove Icons from Dashboard</h2>
+        <ul id="iconList"></ul>
+    </div>
+
+    <script>
+        // Load icons from localStorage
+        let icons = JSON.parse(localStorage.getItem('icons')) || [];
+
+        const iconList = document.getElementById('iconList');
+
+        // Function to display the list of icons
+        const loadIcons = () => {
+            iconList.innerHTML = ''; // Clear the list first
+            icons.forEach((icon, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span>${icon.id}</span>
+                    <button class="remove-btn" onclick="removeIcon(${index})">Remove</button>
+                `;
+                iconList.appendChild(listItem);
+            });
+        };
+
+        // Function to remove an icon by index
+        const removeIcon = (index) => {
+            if (confirm('Are you sure you want to remove this icon?')) {
+                icons.splice(index, 1); // Remove the icon from the array
+                localStorage.setItem('icons', JSON.stringify(icons)); // Save updated array
+                loadIcons(); // Reload the list of icons
+            }
+        };
+
+        // Load icons on page load
+        window.onload = loadIcons;
+    </script>
+
+</body>
+</html>
